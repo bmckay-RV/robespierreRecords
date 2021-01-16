@@ -14,10 +14,11 @@ import (
 var db *sql.DB
 
 const (
-	host   = "localhost"
-	port   = 5432
-	user   = "postgres"
-	dbname = "robespierre_records_db"
+	host    = "localhost"
+	dbport  = 5432
+	user    = "postgres"
+	dbname  = "robespierre_records_db"
+	appport = 8000
 )
 
 type Product struct {
@@ -30,7 +31,7 @@ func main() {
 	// connect to the postgresDB
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"dbname=%s sslmode=disable",
-		host, port, user, dbname)
+		host, dbport, user, dbname)
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		panic(err)
@@ -50,8 +51,8 @@ func main() {
 
 	// creating the server
 	// SHOULD THIS BE A DIFFRENT PORT THAN THE DB PORT ??? PROBABLY !!! FIX !!!
-	fmt.Printf("Listening on port %s\n", strconv.Itoa(port))
-	if err := http.ListenAndServe(":"+strconv.Itoa(port), router); err != nil {
+	fmt.Printf("Listening on port %s\n", strconv.Itoa(appport))
+	if err := http.ListenAndServe(":"+strconv.Itoa(appport), router); err != nil {
 		fmt.Println(err)
 	}
 }
