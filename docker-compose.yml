@@ -1,0 +1,10 @@
+# https://docs.docker.com/compose/compose-file/
+
+# version '3.8'
+
+# services:
+#     app-client:
+#         build:
+#             context: .
+#             dockerfile: dockerfile
+        
