@@ -50,7 +50,6 @@ func main() {
 	router.HandleFunc("/api/products", getAllProducts)
 
 	// creating the server
-	// SHOULD THIS BE A DIFFRENT PORT THAN THE DB PORT ??? PROBABLY !!! FIX !!!
 	fmt.Printf("Listening on port %s\n", strconv.Itoa(appport))
 	if err := http.ListenAndServe(":"+strconv.Itoa(appport), router); err != nil {
 		fmt.Println(err)
@@ -59,19 +58,25 @@ func main() {
 
 // getAllProducts queries all products and runs getMultipleProducts to execute the query
 func getAllProducts(w http.ResponseWriter, r *http.Request) {
-	query := "SELECT Id, Name, Price FROM products"
+	query := "SELECT * FROM products"
+	fmt.Println("getMultipleProductsCalled")
 	getMultipleProducts(w, r, query)
 	fmt.Println("all product api run")
 }
 
 // getMultipleProducts queries & retrieves multiple products from the database
 func getMultipleProducts(w http.ResponseWriter, r *http.Request, query string) {
+	fmt.Println("getMultipleProducts started...")
 	setHeaders(w, r)
 	// If it's a get request, we want to query and return the products
 	if r.Method == http.MethodGet {
+		fmt.Println("r.Method == http.MethodGet")
 		products := []Product{}
+		fmt.Println("initalized empty array of product structs")
 		rows, err := db.Query(query)
+		fmt.Println("ran db.Query(query)")
 		if err != nil {
+			fmt.Println("error querying products:")
 			fmt.Println(err)
 			return
 		}
@@ -81,6 +86,7 @@ func getMultipleProducts(w http.ResponseWriter, r *http.Request, query string) {
 			var product Product
 			err := rows.Scan(&product.ID, &product.Name, &product.Price)
 			if err != nil {
+				fmt.Println("error storing results:")
 				fmt.Println(err)
 				return
 			}
@@ -90,10 +96,12 @@ func getMultipleProducts(w http.ResponseWriter, r *http.Request, query string) {
 		// Encoding the struct into JSON will allow us to access the JSON object using javascript
 		json.NewEncoder(w).Encode(products)
 	}
+	fmt.Println("end of getMultipleProducts Func")
 }
 
 // setHeaders sets the headers for the response
 func setHeaders(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:9090")
+	// remove CORS wildcard!!!!!!!
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 }

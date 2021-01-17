@@ -1,6 +1,6 @@
 
 // product object constructor
-function product (id, name, price){
+function Product (id, name, price){
     this.id = id;
     this.name = name;
     this.price = price;
@@ -30,6 +30,28 @@ function parseProductsResponse(){
 }
 // showAllProducts does the DOM manipulation for the product information
 function showAllProducts(array){
+    const container = document.getElementById('product-container')
+    // for use in manually changing html
+    let name = document.querySelectorAll('.product-name')
+    let price = document.querySelectorAll('.product-price')
+
+    for (let i = 0; i < array.length; i++){
+        console.log("adding products to html")
+        const content = `
+            <div class="product-card">
+                <div class="product-info">
+                    <p class="product-name">${array[i].name}</p>
+                    <p class="product-price">${array[i].price}</p>
+                </div>
+            </div>
+        `;
+        container.innerHTML+=content
+
+        name[i].innerText = array[i].name + " manually added :-("
+        price[i].innerText = '$' + array[i].price + " manually added :-("
+    }
+  
+    
 
 }
 
@@ -45,7 +67,9 @@ function init() {
     // listener function to get product data, and edit the page
     oReq.onload = function () {
         if(oReq.status >= 200 && oReq.status < 300) {
-            let products = parseProductsResponse()    
+            console.log("The request status is between 200 & 300. YOU DID IT")
+            let products = parseProductsResponse()
+            showAllProducts(products)    
         } else {
             // if request fails
             console.log(`The request failed, with status: ${oReq.status}`)
