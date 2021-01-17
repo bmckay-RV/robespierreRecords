@@ -4,7 +4,9 @@
 <head>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width">
-   <script src="../script.js"></script>
+   <script src="script.js"></script>
+   <link rel="stylesheet" href="stylesheets/style.css">
+   <link rel="stylesheet" href="stylesheets/normalize.css">
 </head>
 
 <body>
@@ -14,18 +16,8 @@
             <i> try not to lose your head over these great deals on expertly curated records </i>
         </section>
     </header>
-    <div id="product-container" class="products">
-        <div class="product-card">
-            <div class="product-info">
-                <p class="product-name">hardcoded_product_name_1</p>
-                <p class="product-price">hardcoded_product_price_1</p>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="product-info">
-                <p class="product-name">hardcoded_product_name_2</p>
-                <p class="product-price">hardcoded_product_price_2</p>
-            </div>
+    <div id="product-container" class="products flex">
+    <!-- Will be dynamically populated by showAllProducts()-->
         </div>
     </div>
 </body>

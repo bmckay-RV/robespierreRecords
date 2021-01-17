@@ -31,10 +31,6 @@ function parseProductsResponse(){
 // showAllProducts does the DOM manipulation for the product information
 function showAllProducts(array){
     const container = document.getElementById('product-container')
-    // for use in manually changing html
-    let name = document.querySelectorAll('.product-name')
-    let price = document.querySelectorAll('.product-price')
-
     for (let i = 0; i < array.length; i++){
         console.log("adding products to html")
         const content = `
@@ -46,13 +42,7 @@ function showAllProducts(array){
             </div>
         `;
         container.innerHTML+=content
-
-        name[i].innerText = array[i].name + " manually added :-("
-        price[i].innerText = '$' + array[i].price + " manually added :-("
     }
-  
-    
-
 }
 
 function init() {

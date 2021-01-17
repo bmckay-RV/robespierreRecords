@@ -70,9 +70,26 @@ func getMultipleProducts(w http.ResponseWriter, r *http.Request, query string) {
 	setHeaders(w, r)
 	// If it's a get request, we want to query and return the products
 	if r.Method == http.MethodGet {
-		fmt.Println("r.Method == http.MethodGet")
 		products := []Product{}
 		fmt.Println("initalized empty array of product structs")
+
+		// Testing connection to DB, again
+		// WHY IS THIS NECESSARY ? ?
+		psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+			"dbname=%s sslmode=disable",
+			host, dbport, user, dbname)
+		db, err := sql.Open("postgres", psqlInfo)
+		if err != nil {
+			panic(err)
+		}
+		defer db.Close()
+		err = db.Ping()
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(fmt.Sprintf("Successfully connected to %s, Again!! Nice!", dbname))
+		//
+		//
 		rows, err := db.Query(query)
 		fmt.Println("ran db.Query(query)")
 		if err != nil {
