@@ -3,8 +3,30 @@
 # version '3.8'
 
 # services:
-#     app-client:
-#         build:
-#             context: .
-#             dockerfile: dockerfile
-        
+#     db:
+#         image: postggres
+#         environment: 
+#             POSTGRES_DB: robespierre_records_db
+#             POSTGRES_USER: postgres
+#             POSTGRES_PASSWORD: # should this be removed ??
+#         ports: 
+#             - 5432:5432
+#         volume: 
+#             # THIS IS HOW POSTGRES DATA IS PERSISTED!!!!! 
+#             - data:/var/lib/postgresql/data
+
+
+
+#     api:
+#         # restart: on-failure      
+#         build: .
+#         command: ["go", "run", "main.go"]
+#         ports: 
+#         - "8000:8000"
+#         depends_on:
+#             - db
+#         links: 
+#             - db
+#             - frontEnd
+
+#     client:
