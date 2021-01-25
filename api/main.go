@@ -14,7 +14,8 @@ import (
 var db *sql.DB
 
 const (
-	host    = "localhost"
+	host = "localhost"
+	//host    = "172.17.0.2"
 	dbport  = 5432
 	user    = "postgres"
 	dbname  = "robespierre_records_db"
