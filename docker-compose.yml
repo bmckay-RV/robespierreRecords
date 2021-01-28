@@ -1,32 +1,50 @@
 # https://docs.docker.com/compose/compose-file/
 
-# version '3.8'
+version: "3.7"
 
-# services:
-#     db:
-#         image: postggres
-#         environment: 
-#             POSTGRES_DB: robespierre_records_db
-#             POSTGRES_USER: postgres
-#             POSTGRES_PASSWORD: # should this be removed ??
-#         ports: 
-#             - 5432:5432
-#         volume: 
-#             # THIS IS HOW POSTGRES DATA IS PERSISTED!!!!! 
-#             - data:/var/lib/postgresql/data
+services:
+    db:
+        container_name: psql_db
+        #image: postgres
+        restart: always
+        build:
+            context: ./db
+        environment: 
+            POSTGRES_DB: "records"
+            POSTGRES_USER: "maximilien"
+            POSTGRES_PASSWORD: "verygoodsecurity"
+        ports: 
+            - 5432:5432
+        volumes:
+            - ./postgres-data:/var/lib/postgresql/data
+        networks:
+            - backend
+    app:
+        container_name: golang_api      
+        restart: always
+        build:
+            context: ./app
+        ports: 
+            - "8000:8000"
+        networks:
+            - frontend
+            - backend
+        depends_on: 
+            - db
 
+    client:
+        container_name: static_client
+        restart: always
+        build: 
+            context: ./client
+        ports:
+            - "8080:80"
+        networks: 
+            - frontend
+        depends_on:
+            - db
+            - app
 
-
-#     api:
-#         # restart: on-failure      
-#         build: .
-#         command: ["go", "run", "main.go"]
-#         ports: 
-#         - "8000:8000"
-#         depends_on:
-#             - db
-#         links: 
-#             - db
-#             - frontEnd
-
-#     client:
+networks:
+    frontend:
+    backend:
