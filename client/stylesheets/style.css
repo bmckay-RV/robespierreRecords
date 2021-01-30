@@ -1,3 +1,15 @@
+
+/* ---------------------------------------------------------- */
+/* UNIVERSAL CSS -- Mobile First*/
+/* ---------------------------------------------------------- */
+* {
+    font-family: American Typewriter, serif;
+}
+body {
+    background: url(../img/marble.jpg) no-repeat center center fixed;
+    background-size: cover
+}
+
 .flex {
     display: flex; /* Make products flex in row direction (default) */
     flex-wrap: wrap; /* Make products overflow on new row */
@@ -17,16 +29,122 @@
     flex-grow: 1; /* Keep p's same size */
   }
 
-.product-container {
-    width: 75%;
+#body-contents {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-left: 20%;
+    margin-right: 20%;
+    background-color: white;
+    height: 100%
+}
+h3 {
+    padding-left: 5%;
+    padding-right: 5%;
+    text-align: center;
+    font-weight: lighter ;
+}
+/* ---------------------------------------------------------- */
+/* Nav Bar CSS -- Mobile First*/
+/* ---------------------------------------------------------- */
+.nav  {
+    display: flex;
+    list-style: none;
+    margin-right: 1%;
+    padding: 2em;
+  }
+  
+  .nav a {
+    display: none;
+    color: white;
+    text-decoration: none;
+    letter-spacing: .45rem;
+    padding: 1em;
+  }
+
+#nav-container {
+    display: flex;
+    margin-left: 5%;
+    margin-right: 5%;
+    justify-content: space-between;
+    align-items: center;
+    background: black;
+    color: white
+}
+
+#nav-container > a {
+    display: block;
+    color: grey
+}
+.title {
+    margin: 0 0 0 .45em;
+}
+.title a {
+    color: white;
+    letter-spacing: .45rem;
+}
+/* ---------------------------------------------------------- */
+/* Filter Bar CSS -- Mobile First*/
+/* ---------------------------------------------------------- */
+
+#filter-container {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    margin-right: 1%;
+    padding: 2em;
+    width: 75%
+
+}
+
+#artist-select {
+    width: 80%;
+}
+#filter-container a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right:50%;
+    padding: 10px;
+ 
+}
+#filter-container label {
+    font-weight: lighter;
+}
+
+#filter-container > form > button {
+    margin-top: 10px;
 }
 
 
-.home_header {
-    flex: 1 1 0; /* Prevent the extra space around content */
-    text-align: center; /* Align text on center */
-    display: flex; /* Display as flex */
-    flex-direction: column; /* Display flex in column */
-    align-items: center; /* Align items on center */
-    max-width: 400px; /* Set max-width so the last items will behave in a more traditional way */
+
+/* ---------------------------------------------------------- */
+/* UNIVERSAL CSS -- Desktop*/
+/* ---------------------------------------------------------- */
+@media (min-width: 800px){
+  
+.nav  {
+    display: flex;
+    list-style: none;
+    margin-right: 1%;
+    padding: 1em;
+  }
+  
+  .nav a {
+    display: block;
+    padding: 1em;
+    color: white;
+    text-decoration: none;
+    letter-spacing: .45rem;
+  }
+  
+  .nav a:hover {
+      background: white;
+      color: black
+  }
+
+  .current {
+    outline-style: dotted;
+  }
+ 
 }

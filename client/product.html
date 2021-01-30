@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width">
+   <script src="script.js"></script>
+   <link rel="stylesheet" href="stylesheets/style.css">
+   <link rel="stylesheet" href="stylesheets/normalize.css">
+</head>
+
+<body>
+    <div id="nav-container">
+
+        <h1 class="title"><a href-"#">robespierre records.</a></h1>
+                    <ul class="nav">
+                    <li><a class="current" href-"#">products</a></li>
+                    <li><a href-"#">contact</a></li>
+                    </ul>
+    </div>
+    <div id="body-contents">
+        <div id="filter-container" class="flex">
+            <form>
+                <a>select an artist..</a>
+                <select id="artist-select">
+                    <option value="default">...</option>
+                </select></br>
+                <a>and/or</a>
+                <a>select a sort method.</a>
+                    <input type="radio" id="price_desc" name="sort" value="price_desc">
+                    <label for="price_desc">price descending.</label></br>
+                    <input type="radio" id="price_asc" name="sort" value="price_asc">
+                    <label for="price_asc">price ascending.</label></br>
+                    <a>or,</a>
+
+                    <input type="radio" id="listen_count_desc" name="sort" value="listen_count_desc">
+                    <label for="listen_count_desc">listen count descending.</label></br>
+                    <input type="radio" id="listen_count_asc" name="sort" value="listen_count_asc">
+                    <label for="listen_count_asc">listen count ascending.</label></br>
+                    <button onclick="filterProducts()" type="button">search.</button>
+            </form> 
+        </div>
+        <div id="product-container" class="products flex">
+        <!-- Will be dynamically populated by showAllProducts()-->
+        </div>
+    </div>
+</body>
+
+</html>

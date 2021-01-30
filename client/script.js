@@ -25,8 +25,8 @@ function parseProductsResponse(){
     let productArray = []
     for (let i = 0; i < productsArrayTemp.length; i++) {
         let obj = new Product(productsArrayTemp[i].id, productsArrayTemp[i].name, productsArrayTemp[i].price, productsArrayTemp[i].photo, productsArrayTemp[i].listenCount); 
-        console.log("photolink: " + productsArrayTemp[i].photo)
-        console.log("listenCount: " + productsArrayTemp[i].listenCount)
+        // console.log("photolink: " + productsArrayTemp[i].photo)
+        // console.log("listenCount: " + productsArrayTemp[i].listenCount)
         productArray.push(obj);
       }
     return productArray
@@ -50,6 +50,77 @@ function showAllProducts(array){
     }
 }
 
+function getArtistList(products){
+    let list = document.getElementById('artist-select');
+    products.sort(compareValues('name'));
+    products.forEach(function(r) {
+        list.options[list.options.length]= new Option(r.name,r.name)
+
+    })
+}
+
+function compareValues(key, order = 'asc') {
+    return function innerSort(a, b) {
+      if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+        // property doesn't exist on either object
+        return 0;
+      }
+  
+      const varA = (typeof a[key] === 'string')
+        ? a[key].toUpperCase() : a[key];
+      const varB = (typeof b[key] === 'string')
+        ? b[key].toUpperCase() : b[key];
+  
+      let comparison = 0;
+      if (varA > varB) {
+        comparison = 1;
+      } else if (varA < varB) {
+        comparison = -1;
+      }
+      return (
+        (order === 'desc') ? (comparison * -1) : comparison
+      );
+    };
+  }
+
+function filterProducts(){
+    var paras = document.getElementsByClassName('product-card')
+    while(paras[0]){
+        paras[0].parentNode.removeChild(paras[0])
+    }
+    let productTemp = products.slice();
+    var artist_select = document.getElementById('artist-select').value
+    if(artist_select != "..."){
+        for(i=0; i<productTemp.length;i++){
+            //change to r.artist once available!!!
+            if (productTemp[i].name != artist_select){
+                delete productTemp[i]
+            }      
+        }
+    }
+    var ele = document.getElementsByName('sort');
+    for (i=0;i<ele.length;i++){
+        if(ele[i].checked){
+            console.log(ele[i].innerText)
+            if(ele[i].value == "price_desc"){
+                showAllProducts(productTemp.sort(compareValues('price', 'desc')))
+            } else if((ele[i].value == "price_asc")){
+                showAllProducts(productTemp.sort(compareValues('price')))
+            } else if((ele[i].value == "listen_count_asc")){
+                showAllProducts(productTemp.sort(compareValues('listenCount')))
+            } else if((ele[i].value == "listen_count_desc")){
+                showAllProducts(productTemp.sort(compareValues('listenCount', 'desc')))
+            } else {
+                console.log("did not filter products")
+                showAllProducts(products)
+            }
+        }
+    }
+}
+
+
+
+
 function init() {
     // // sets endpoint for specific product
     // let productId = url.split('?pid=')[1]
@@ -63,8 +134,9 @@ function init() {
     oReq.onload = function () {
         if(oReq.status >= 200 && oReq.status < 300) {
             console.log("The request status is between 200 & 300. YOU DID IT")
-            let products = parseProductsResponse()
-            showAllProducts(products)    
+            products = parseProductsResponse()
+            showAllProducts(products)  
+            getArtistList(products)  
         } else {
             // if request fails
             console.log(`The request failed, with status: ${oReq.status}`)
