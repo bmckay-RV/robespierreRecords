@@ -19,17 +19,22 @@ const (
 	//host = "localhost"
 	host = "psql_db"
 	//host    = "172.17.0.2"
+	//host     = "0.0.0.0"
 	dbport   = 5432
 	user     = "maximilien"
 	password = "verygoodsecurity"
-	dbname   = "records"
-	appport  = 8000
+	//dbname   = "products"
+	dbname  = "records"
+	appport = 8000
 )
 
 type Product struct {
-	ID    int64   `json:"id"`
-	Name  string  `json:"name"`
-	Price float64 `json:"price"`
+	ID string `json:"id"`
+	// Mbid        string  `json:"mbid"`
+	Name        string  `json:"name"`
+	Price       float64 `json:"price"`
+	PhotoLink   string  `json:"photo_link"`
+	ListenCount int32   `json:"listen_count"`
 }
 
 func main() {
@@ -46,17 +51,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(fmt.Sprintf("Successfully connected to %s!! Nice!", dbname))
-
-	// LAST FM connection
-	api := lastfm.New("d966588655693e6ca5d6e0c1b78142c0", "5a11e218afd808b894843323291e39fc")
-
-	result, _ := api.User.GetTopAlbums(lastfm.P{"user": "bmmckay", "period": "1month"}) //discarding error
-	for _, album := range result.Albums {
-		fmt.Println(fmt.Sprintf("album %v artist %v playcount %v image", album.Name, album.Artist.Name, album.PlayCount)) //album.Image["large"]))
-	}
-	// LAST FM connection
-
+	fmt.Println(fmt.Sprintf("Successfully connected to db %s, host %s, user %s, password %s!! Nice!", dbname, host, user, password))
 	// setting up the mux router
 	router := mux.NewRouter()
 
@@ -64,18 +59,41 @@ func main() {
 	router.HandleFunc("/api/products", getAllProducts)
 
 	// creating the server
-	fmt.Printf("Listening on port %s\n", strconv.Itoa(appport))
 	if err := http.ListenAndServe(":"+strconv.Itoa(appport), router); err != nil {
 		fmt.Println(err)
 	}
+	fmt.Printf("Listening on port %s\n", strconv.Itoa(appport))
+
 }
 
 // getAllProducts queries all products and runs getMultipleProducts to execute the query
 func getAllProducts(w http.ResponseWriter, r *http.Request) {
-	query := "SELECT * FROM products"
+	query := "SELECT * FROM records_table"
 	// fmt.Println("getMultipleProductsCalled")
 	getMultipleProducts(w, r, query)
-	fmt.Println("finshed getAllProducts")
+	fmt.Println("finshed getAllRecords")
+}
+
+// populates the records_table with last.fm consumed data, recently listened to albums
+func populateRecordsTable() {
+	api := lastfm.New("d966588655693e6ca5d6e0c1b78142c0", "5a11e218afd808b894843323291e39fc")
+	result, _ := api.User.GetTopAlbums(lastfm.P{"user": "bmmckay", "period": "1month"}) //discarding error
+
+	for _, album := range result.Albums {
+		fmt.Println(fmt.Sprintf("album %v artist %v playcount %v image", album.Name, album.Artist.Name, album.PlayCount)) //album.Image["large"]))
+		//doing this v. just creating a sql string to prevent sql injection!!!
+		sqlStatement := `
+		INSERT INTO records_table (name, price, photo_link, listen_count)
+		VALUES ($1, $2, $3, $4)
+		RETURNING id`
+		id := 0
+		err := db.QueryRow(sqlStatement, album.Name, 9.99, "album_art_placeholder", album.PlayCount).Scan(&id)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(fmt.Sprintf("added to db: %s, id:", album.Name, id))
+	}
+
 }
 
 // getMultipleProducts queries & retrieves multiple products from the database
@@ -105,7 +123,7 @@ func getMultipleProducts(w http.ResponseWriter, r *http.Request, query string) {
 		// As long as there is a next row, we are defining which fields the product struct will be assigned
 		for rows.Next() {
 			var product Product
-			err := rows.Scan(&product.ID, &product.Name, &product.Price)
+			err := rows.Scan(&product.ID, &product.Name, &product.Price, &product.PhotoLink, &product.ListenCount)
 			if err != nil {
 				fmt.Println("error storing results:")
 				fmt.Println(err)
@@ -113,6 +131,7 @@ func getMultipleProducts(w http.ResponseWriter, r *http.Request, query string) {
 			}
 			// Appending all product structs to the products slice
 			products = append(products, product)
+			fmt.Println(fmt.Sprintf("added product: %s", product.Name))
 		}
 		// Encoding the struct into JSON will allow us to access the JSON object using javascript
 		json.NewEncoder(w).Encode(products)

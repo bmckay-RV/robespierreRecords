@@ -1,9 +1,10 @@
-CREATE TABLE products
-(
-    id   SERIAL,
+CREATE TABLE records_table (
+    id serial primary key,
     name TEXT NOT NULL,
-    price  NUMERIC NOT NULL DEFAULT 0.00
+    price NUMERIC NOT NULL DEFAULT 0.00,
+    photo_link TEXT,
+    listen_count numeric DEFAULT 0
 );
 
-insert into products (id, name, price)
-values (1, 'marths_product', 999.99);
+INSERT INTO records_table (name, price, photo_link, listen_count)
+VALUES ("name", "price", "photo_link", "listen_count");
