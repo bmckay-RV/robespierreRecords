@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"strconv"
 
@@ -29,11 +30,10 @@ const (
 )
 
 type Product struct {
-	ID string `json:"id"`
-	// Mbid        string  `json:"mbid"`
+	ID          string  `json:"id"`
 	Name        string  `json:"name"`
 	Price       float64 `json:"price"`
-	PhotoLink   string  `json:"photo_link"`
+	Photo       string  `json:"photo"`
 	ListenCount int32   `json:"listen_count"`
 }
 
@@ -54,21 +54,25 @@ func main() {
 	fmt.Println(fmt.Sprintf("Successfully connected to db %s, host %s, user %s, password %s!! Nice!", dbname, host, user, password))
 	// populates the records_table with last.fm consumed data, recently listened to albums
 	api := lastfm.New("d966588655693e6ca5d6e0c1b78142c0", "5a11e218afd808b894843323291e39fc")
-	result, _ := api.User.GetTopAlbums(lastfm.P{"user": "bmmckay", "period": "1month"}) //discarding error
+	result, _ := api.User.GetTopAlbums(lastfm.P{"user": "bmmckay", "period": "12month", "limit": "300"}) //discarding error
 
 	for _, album := range result.Albums {
-		fmt.Println(fmt.Sprintf("album %v artist %v playcount %v image", album.Name, album.Artist.Name, album.PlayCount)) //album.Image["large"]))
+		if len(album.Images[3].Url) == 0 {
+			continue
+		}
 		//doing this v. just creating a sql string to prevent sql injection!!!
 		sqlStatement := `
-		INSERT INTO records_table (name, price, photo_link, listen_count)
+		INSERT INTO records_table (name, price, photo, listen_count)
 		VALUES ($1, $2, $3, $4)
 		RETURNING id`
 		id := 0
-		err := db.QueryRow(sqlStatement, album.Name, 9.99, album.Images[3].Url, album.PlayCount).Scan(&id)
+		min := 1
+		max := 25
+		err := db.QueryRow(sqlStatement, album.Name, float64(rand.Intn(max-min))+.99, album.Images[3].Url, album.PlayCount).Scan(&id)
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(fmt.Sprintf("added to db: %s, image: %s, id: %d", album.Name, album.Images[3].Url, id))
+		// fmt.Println(fmt.Sprintf("added to db: %s, image: %s, id: %d", album.Name, album.Images[3].Url, id))
 	}
 
 	// setting up the mux router
@@ -120,7 +124,7 @@ func getMultipleProducts(w http.ResponseWriter, r *http.Request, query string) {
 		// As long as there is a next row, we are defining which fields the product struct will be assigned
 		for rows.Next() {
 			var product Product
-			err := rows.Scan(&product.ID, &product.Name, &product.Price, &product.PhotoLink, &product.ListenCount)
+			err := rows.Scan(&product.ID, &product.Name, &product.Price, &product.Photo, &product.ListenCount)
 			if err != nil {
 				fmt.Println("error storing results:")
 				fmt.Println(err)
@@ -128,7 +132,7 @@ func getMultipleProducts(w http.ResponseWriter, r *http.Request, query string) {
 			}
 			// Appending all product structs to the products slice
 			products = append(products, product)
-			fmt.Println(fmt.Sprintf("added product: %s", product.Name))
+			// fmt.Println(fmt.Sprintf("added product: %s", product.Photo))
 		}
 		// Encoding the struct into JSON will allow us to access the JSON object using javascript
 		json.NewEncoder(w).Encode(products)

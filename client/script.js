@@ -1,9 +1,11 @@
 
 // product object constructor
-function Product (id, name, price){
+function Product (id, name, price, photo, listenCount){
     this.id = id;
     this.name = name;
     this.price = price;
+    this.photo = photo;
+    this.listenCount = listenCount;
 }
 
 // setting up the http request
@@ -22,22 +24,25 @@ function parseProductsResponse(){
     // creating array of product objects
     let productArray = []
     for (let i = 0; i < productsArrayTemp.length; i++) {
-        let obj = new Product(productsArrayTemp[i].id, productsArrayTemp[i].name, productsArrayTemp[i].price); 
+        let obj = new Product(productsArrayTemp[i].id, productsArrayTemp[i].name, productsArrayTemp[i].price, productsArrayTemp[i].photo, productsArrayTemp[i].listenCount); 
+        console.log("photolink: " + productsArrayTemp[i].photo)
+        console.log("listenCount: " + productsArrayTemp[i].listenCount)
         productArray.push(obj);
       }
-    console.log(`new productArray ${productArray}`)
     return productArray
 }
 // showAllProducts does the DOM manipulation for the product information
 function showAllProducts(array){
     const container = document.getElementById('product-container')
     for (let i = 0; i < array.length; i++){
-        console.log("adding products to html")
+       // console.log("adding products to html")
+        //console.log(array[i].photolink)
         const content = `
             <div class="product-card">
+                <img src="${array[i].photo}">
                 <div class="product-info">
                     <p class="product-name">${array[i].name}</p>
-                    <p class="product-price">${array[i].price}</p>
+                    <p class="product-price">$ ${array[i].price}</p>
                 </div>
             </div>
         `;

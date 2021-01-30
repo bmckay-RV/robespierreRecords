@@ -16,3 +16,17 @@
 .flex > div > p {
     flex-grow: 1; /* Keep p's same size */
   }
+
+.product-container {
+    width: 75%;
+}
+
+
+.home_header {
+    flex: 1 1 0; /* Prevent the extra space around content */
+    text-align: center; /* Align text on center */
+    display: flex; /* Display as flex */
+    flex-direction: column; /* Display flex in column */
+    align-items: center; /* Align items on center */
+    max-width: 400px; /* Set max-width so the last items will behave in a more traditional way */
+}
