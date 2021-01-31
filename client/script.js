@@ -67,6 +67,20 @@ function getArtistList(products){
         list.options[list.options.length]= new Option(r,r)
     })
 }
+function getAlbumList(products){
+    let list = ''
+    let temp_albums = products.slice()
+    // this is probably slower than removing uniques before sorting ... but the set thing is easier :-) lazy!
+    temp_albums.sort(compareValues('artist'));
+    let unique = [...new Set(temp_albums.map(a => a.name))];
+
+    unique.forEach(function(r) {
+        list += '<option value="' + r + '" />'
+    })
+    document.getElementById('album-list').innerHTML = list
+}
+
+
 
 function compareValues(key, order = 'asc') {
     return function innerSort(a, b) {
@@ -209,7 +223,8 @@ function init() {
                 console.log("The request status is between 200 & 300. YOU DID IT")
                 products = parseProductsResponse()
                 showAllProducts(products)  
-                getArtistList(products)  
+                getArtistList(products)
+                getAlbumList(products)  
             } else {
                 // if request fails
                 console.log(`The request failed, with status: ${oReq.status}`)
