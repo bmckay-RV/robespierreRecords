@@ -3,9 +3,9 @@
 function Product (id, name, price, photo, listenCount){
     this.id = id;
     this.name = name;
-    this.price = price;
+    this.price = parseFloat(price);
     this.photo = photo;
-    this.listenCount = listenCount;
+    this.listenCount = parseInt(listenCount);
 }
 
 // setting up the http request
@@ -33,10 +33,11 @@ function parseProductsResponse(){
 }
 // showAllProducts does the DOM manipulation for the product information
 function showAllProducts(array){
-    const container = document.getElementById('product-container')
-    for (let i = 0; i < array.length; i++){
+    const container = document.getElementById('product-container');
+    console.log(array[0].name)
+    for (i = 0; i < array.length; i++){
        // console.log("adding products to html")
-        //console.log(array[i].photolink)
+       console.log(array[i].name)
         const content = `
             <div class="product-card">
                 <img src="${array[i].photo}">
@@ -55,7 +56,6 @@ function getArtistList(products){
     products.sort(compareValues('name'));
     products.forEach(function(r) {
         list.options[list.options.length]= new Option(r.name,r.name)
-
     })
 }
 
@@ -65,7 +65,7 @@ function compareValues(key, order = 'asc') {
         // property doesn't exist on either object
         return 0;
       }
-  
+
       const varA = (typeof a[key] === 'string')
         ? a[key].toUpperCase() : a[key];
       const varB = (typeof b[key] === 'string')
@@ -90,7 +90,7 @@ function filterProducts(){
     }
     let productTemp = products.slice();
     var artist_select = document.getElementById('artist-select').value
-    if(artist_select != "..."){
+    if(artist_select != "default"){
         for(i=0; i<productTemp.length;i++){
             //change to r.artist once available!!!
             if (productTemp[i].name != artist_select){
@@ -99,22 +99,28 @@ function filterProducts(){
         }
     }
     var ele = document.getElementsByName('sort');
+    let filters = ''
     for (i=0;i<ele.length;i++){
         if(ele[i].checked){
-            console.log(ele[i].innerText)
-            if(ele[i].value == "price_desc"){
-                showAllProducts(productTemp.sort(compareValues('price', 'desc')))
-            } else if((ele[i].value == "price_asc")){
-                showAllProducts(productTemp.sort(compareValues('price')))
-            } else if((ele[i].value == "listen_count_asc")){
-                showAllProducts(productTemp.sort(compareValues('listenCount')))
-            } else if((ele[i].value == "listen_count_desc")){
-                showAllProducts(productTemp.sort(compareValues('listenCount', 'desc')))
-            } else {
-                console.log("did not filter products")
-                showAllProducts(products)
-            }
+            filters = ele[i].value
         }
+    }
+    console.log(products.length)
+    console.log("filter: " + filters)
+    if(filters == "price_desc"){
+        showAllProducts(productTemp.sort(compareValues('price', 'desc')))
+    } else if(filters == "price_asc"){
+        productTemp.sort(compareValues('price'))
+        console.log(productTemp[0].name)
+        showAllProducts(productTemp)
+    } else if(filters == "listen_count_asc"){
+        showAllProducts(productTemp.sort(compareValues('listenCount')))
+    } else if(filters == "listen_count_desc"){
+        showAllProducts(productTemp.sort(compareValues('listenCount', 'desc')))
+    } else {
+        console.log("did not filter products")
+        console.log(productTemp[0].name)
+        showAllProducts(productTemp);
     }
 }
 
