@@ -12,7 +12,7 @@
 <body>
     <div id="nav-container">
 
-        <h1 class="title"><a href-"#">robespierre records.</a></h1>
+        <h1 class="title"><a href="index.html">robespierre records.</a></h1>
                     <ul class="nav">
                     <li><a class="current" href-"#">products</a></li>
                     <li><a href-"#">contact</a></li>
@@ -21,23 +21,23 @@
     <div id="body-contents">
         <div id="filter-container" class="flex">
             <form>
-                <a>select an artist..</a>
+                <a>select an artist..</a></br>
                 <select id="artist-select">
                     <option value="default">...</option>
                 </select></br>
-                <a>and/or</a>
-                <a>select a sort method.</a>
-                    <input type="radio" id="price_desc" name="sort" value="price_desc">
-                    <label for="price_desc">price descending.</label></br>
+                <a>and/or a sort method.</a></br>
+                    <input type="radio" id="price_desc" name="sort" value="price_desc" checked>
+                    <a><label for="price_desc">price descending.</label></a>
                     <input type="radio" id="price_asc" name="sort" value="price_asc">
-                    <label for="price_asc">price ascending.</label></br>
-                    <a>or,</a>
+                    <a><label for="price_asc">price ascending.</label></a>
+                    </br>
+                    <a>or,</a></br>
 
                     <input type="radio" id="listen_count_desc" name="sort" value="listen_count_desc">
-                    <label for="listen_count_desc">listen count descending.</label></br>
+                    <a><label for="listen_count_desc">listen count descending.</label></a>
                     <input type="radio" id="listen_count_asc" name="sort" value="listen_count_asc">
-                    <label for="listen_count_asc">listen count ascending.</label></br>
-                    <button onclick="filterProducts()" type="button">search.</button>
+                    <a><label for="listen_count_asc">listen count ascending.</label></a></br>
+                    <a><button onclick="filterProducts()" type="button">search.</button></a>
             </form> 
         </div>
         <div id="product-container" class="products flex">

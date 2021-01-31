@@ -89,27 +89,25 @@ h3 {
 
 #filter-container {
     display: flex;
-    flex-direction: row;
-    list-style: none;
-    margin-right: 1%;
-    padding: 2em;
-    width: 75%
-
-}
-
-#artist-select {
-    width: 80%;
-}
-#filter-container a {
-    display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-right:50%;
-    padding: 10px;
- 
+    background-color: white
+
+}
+#filter-container > form {
+    padding: 1em;
+}
+
+
+#filter-container  a {
+    margin: 10px;
+    text-align: center;
+    line-height: 200%;
+
 }
 #filter-container label {
     font-weight: lighter;
+    padding-top: 10px;
 }
 
 #filter-container > form > button {

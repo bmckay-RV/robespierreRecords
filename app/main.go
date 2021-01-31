@@ -32,6 +32,8 @@ const (
 type Product struct {
 	ID          string  `json:"id"`
 	Name        string  `json:"name"`
+	Artist      string  `json:"artist"`
+	MBID        string  `json:"mbid"`
 	Price       float64 `json:"price"`
 	Photo       string  `json:"photo"`
 	ListenCount int32   `json:"listen_count"`
@@ -60,19 +62,22 @@ func main() {
 		if len(album.Images[3].Url) == 0 {
 			continue
 		}
+		fmt.Println(fmt.Sprintf("adding to db: %s, artist: %s, image: %s, mbid: %s", album.Name, album.Artist.Name, album.Images[3].Url, album.Mbid))
 		//doing this v. just creating a sql string to prevent sql injection!!!
 		sqlStatement := `
-		INSERT INTO records_table (name, price, photo, listen_count)
-		VALUES ($1, $2, $3, $4)
+		INSERT INTO records_table (name, artist, mbid, price, photo, listen_count)
+		VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING id`
+		//rand_price := rand.Float64() + float64(rand.Intn(50))
 		id := 0
 		min := 1
-		max := 25
-		err := db.QueryRow(sqlStatement, album.Name, float64(rand.Intn(max-min))+.99, album.Images[3].Url, album.PlayCount).Scan(&id)
+		max := 41
+		err := db.QueryRow(sqlStatement, album.Name, album.Artist.Name, album.Mbid, float64(rand.Intn(max-min))+.01, album.Images[3].Url, album.PlayCount).Scan(&id)
 		if err != nil {
+			fmt.Println(sqlStatement)
 			panic(err)
 		}
-		// fmt.Println(fmt.Sprintf("added to db: %s, image: %s, id: %d", album.Name, album.Images[3].Url, id))
+		fmt.Println(fmt.Sprintf("added to db: %s, artist: %s, image: %s, mbid: %s", album.Name, album.Artist.Name, album.Images[3].Url, album.Mbid))
 	}
 
 	// setting up the mux router
@@ -124,7 +129,7 @@ func getMultipleProducts(w http.ResponseWriter, r *http.Request, query string) {
 		// As long as there is a next row, we are defining which fields the product struct will be assigned
 		for rows.Next() {
 			var product Product
-			err := rows.Scan(&product.ID, &product.Name, &product.Price, &product.Photo, &product.ListenCount)
+			err := rows.Scan(&product.ID, &product.Name, &product.Artist, &product.MBID, &product.Price, &product.Photo, &product.ListenCount)
 			if err != nil {
 				fmt.Println("error storing results:")
 				fmt.Println(err)
