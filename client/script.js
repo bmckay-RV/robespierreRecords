@@ -36,7 +36,7 @@ function parseProductsResponse(){
 // showAllProducts does the DOM manipulation for the product information
 function showAllProducts(array){
     const container = document.getElementById('product-container');
-    console.log(array[0].name)
+    //console.log(array[0].name)
     for (i = 0; i < array.length; i++){
        // console.log("adding products to html")
        console.log(array[i].name)
@@ -248,6 +248,8 @@ function init() {
             }
         };
 
+    } else if (currentUrl.split('?')[0] == "index.html"){
+     
     }
     
 }
