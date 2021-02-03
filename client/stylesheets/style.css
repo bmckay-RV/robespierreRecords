@@ -4,6 +4,8 @@
 /* ---------------------------------------------------------- */
 * {
     font-family: American Typewriter, serif;
+    border: solid red;
+    
 }
 body {
     background: url(../img/marble.jpg) no-repeat center center fixed;
@@ -89,7 +91,8 @@ h3 {
 
 #filter-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    text-align: center;
     list-style: none;
     margin-right: 1%;
     padding: 2em;
@@ -106,6 +109,8 @@ h3 {
     line-height: 200%;
 
 }
+
+
 #filter-container label {
     font-weight: lighter;
     padding-top: 10px;

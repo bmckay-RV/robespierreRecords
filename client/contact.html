@@ -25,15 +25,16 @@
             <form name="contact-form" action="" onsubmit="return validateForm()" method="post">
                 <div class="form-group">
                     <label for="name">name:</label>
-                    <input type="name" class="form-control" id="name">
+                    <input type="name" class="form-control" id="name" required>
                     </div>
                 <div class="form-group">
                     <label for="email">email address:</label>
-                    <input type="email" class="form-control" id="email">
+                    <input type="email" class="form-control" id="email" required>
                 </div>
                 <div class="form-group">
                     <label for="phone">phone:</label>
                     <input type="tel" class="form-control" id="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                    // specify the requested format
                     required>
                 </div>
                 <div class="form-group">
@@ -49,7 +50,8 @@
                         <div class="checkbox"><label><input type="checkbox"> word of mouth</label></div>
                         <div class="checkbox"><label><input type="checkbox"> other</label></div>
 
-                
+                        <!-- need id, value, name -->
+
                 <div class="form-group">
                     <label for="comment">additional comments...</label>
                     <textarea class="form-control" rows="5" id="comment"></textarea>

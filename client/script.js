@@ -20,8 +20,10 @@ function parseProductsResponse(){
     let products = JSON.parse(oReq.response)
     let productsArrayTemp = Array.from(products)
     // if array is empty, push the products object
+    
     if (productsArrayTemp.length < 1) {
-        productsArrayTemp.push(prod)
+        console.log("prod" + prod)
+        productsArrayTemp.push("empty")
     }
     // creating array of product objects
     let productArray = []
@@ -39,7 +41,7 @@ function showAllProducts(array){
     //console.log(array[0].name)
     for (i = 0; i < array.length; i++){
        // console.log("adding products to html")
-       console.log(array[i].name)
+       //console.log(array[i].name)
         const content = `
             <div class="product-card">
                 <a href="detail.html?&artist=${array[i].artist}&album=${array[i].name}">
@@ -71,17 +73,15 @@ function getAlbumList(products){
     let list = ''
     let temp_albums = products.slice()
     // this is probably slower than removing uniques before sorting ... but the set thing is easier :-) lazy!
-    temp_albums.sort(compareValues('artist'));
-    let unique = [...new Set(temp_albums.map(a => a.name))];
+    temp_albums.sort(compareValues('album'));
+    temp_albums.forEach(function(r) {
+        // list += '<option value="&artist=' + r.artist + '&album=' + r.name + '" label="' + r.name + '"/>'
+         list += '<option value="&artist=' + r.artist + '&album=' + r.name + '" label="' + r.name + '"/>'
 
-    unique.forEach(function(r) {
-        list += '<option value="' + r + '" />'
-    })
+        // list += '<option value="' + r.name + '"/>'
+    }) 
     document.getElementById('album-list').innerHTML = list
 }
-
-
-
 function compareValues(key, order = 'asc') {
     return function innerSort(a, b) {
       if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
@@ -115,11 +115,16 @@ function filterProducts(){
     var artist_select = document.getElementById('artist-select').value
     if(artist_select != "default"){
         for(i=0; i<productTemp.length;i++){
-            //change to r.artist once available!!!
             if (productTemp[i].artist != artist_select){
                 delete productTemp[i]
             }      
         }
+    }
+    var album_select = document.getElementById('album-select').value
+    //console.log("hur!")
+    if(album_select != ""){
+        console.log("album_select"+album_select)
+        window.location.href = 'detail.html?' + album_select
     }
     var ele = document.getElementsByName('sort');
     let filters = ''
@@ -137,9 +142,9 @@ function filterProducts(){
         console.log(productTemp[0].name)
         showAllProducts(productTemp)
     } else if(filters == "listen_count_asc"){
-        showAllProducts(productTemp.sort(compareValues('listenCount')))
+        showAllProducts(productTemp.reverse())
     } else if(filters == "listen_count_desc"){
-        showAllProducts(productTemp.sort(compareValues('listenCount', 'desc')))
+        showAllProducts(productTemp)
     } else {
         console.log("did not filter products")
         showAllProducts(productTemp);

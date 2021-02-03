@@ -56,7 +56,7 @@ func main() {
 	fmt.Println(fmt.Sprintf("Successfully connected to db %s, host %s, user %s, password %s!! Nice!", dbname, host, user, password))
 	// populates the records_table with last.fm consumed data, recently listened to albums
 	api := lastfm.New("d966588655693e6ca5d6e0c1b78142c0", "5a11e218afd808b894843323291e39fc")
-	result, _ := api.User.GetTopAlbums(lastfm.P{"user": "bmmckay", "period": "12month", "limit": "300"}) //discarding error
+	result, _ := api.User.GetTopAlbums(lastfm.P{"user": "bmmckay", "period": "12month", "limit": "50"}) //discarding error
 
 	for _, album := range result.Albums {
 		if len(album.Images[3].Url) == 0 {

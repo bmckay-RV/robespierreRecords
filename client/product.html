@@ -24,7 +24,7 @@
         <div id="filter-container" class="flex">
             <form>
                 <a>search for an album</a></br>
-                <input name="album-select" id="album-select" list="album-list">
+                <input type="search" name="album-select" id="album-select" list="album-list">
                     <datalist id="album-list">
                         <option value="default">...</option>
                     </datalist>
@@ -43,7 +43,7 @@
                     </br>
                     <a>or,</a></br>
 
-                    <input type="radio" id="listen_count_desc" name="sort" value="listen_count_desc">
+                    <input type="radio" id="listen_count_desc" name="sort" value="listen_count_desc" checked >
                     <a><label for="listen_count_desc">listen count descending.</label></a>
                     <input type="radio" id="listen_count_asc" name="sort" value="listen_count_asc">
                     <a><label for="listen_count_asc">listen count ascending.</label></a></br>
