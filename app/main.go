@@ -17,16 +17,12 @@ var db *sql.DB
 
 // .env file, needs change to dockerfile
 const (
-	//host = "localhost"
-	host = "psql_db"
-	//host    = "172.17.0.2"
-	//host     = "0.0.0.0"
+	host     = "psql_db"
 	dbport   = 5432
 	user     = "maximilien"
 	password = "verygoodsecurity"
-	//dbname   = "products"
-	dbname  = "records"
-	appport = 8000
+	dbname   = "records"
+	appport  = 8000
 )
 
 type Product struct {
@@ -44,7 +40,7 @@ func main() {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, dbport, user, password, dbname)
 	//psqlInfo := "postgresql://postgres:password@psql_db:5432?sslmode=disable"
 	db, err := sql.Open("postgres", psqlInfo)
-	fmt.Println(psqlInfo)
+	//fmt.Println(psqlInfo)
 	if err != nil {
 		panic(err)
 	}
@@ -55,9 +51,11 @@ func main() {
 	}
 	fmt.Println(fmt.Sprintf("Successfully connected to db %s, host %s, user %s, password %s!! Nice!", dbname, host, user, password))
 	// populates the records_table with last.fm consumed data, recently listened to albums
+	// AGAIN WITH THE INLINE API KEYS SMH
 	api := lastfm.New("d966588655693e6ca5d6e0c1b78142c0", "5a11e218afd808b894843323291e39fc")
 	result, _ := api.User.GetTopAlbums(lastfm.P{"user": "bmmckay", "period": "12month", "limit": "50"}) //discarding error
 
+	// writes to the db for each album!
 	for _, album := range result.Albums {
 		if len(album.Images[3].Url) == 0 {
 			continue
@@ -68,7 +66,6 @@ func main() {
 		INSERT INTO records_table (name, artist, mbid, price, photo, listen_count)
 		VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING id`
-		//rand_price := rand.Float64() + float64(rand.Intn(50))
 		id := 0
 		min := 1
 		max := 41
@@ -79,13 +76,10 @@ func main() {
 		}
 		fmt.Println(fmt.Sprintf("added to db: %s, artist: %s, image: %s, mbid: %s", album.Name, album.Artist.Name, album.Images[3].Url, album.Mbid))
 	}
-
 	// setting up the mux router
 	router := mux.NewRouter()
-
 	// telling the server what it should listen for, and what to do!
 	router.HandleFunc("/api/products", getAllProducts)
-
 	// creating the server
 	if err := http.ListenAndServe(":"+strconv.Itoa(appport), router); err != nil {
 		fmt.Println(err)

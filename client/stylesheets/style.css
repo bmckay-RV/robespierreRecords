@@ -4,7 +4,7 @@
 /* ---------------------------------------------------------- */
 * {
     font-family: American Typewriter, serif;
-    border: solid red;
+    /* border: solid red; */
     
 }
 body {
@@ -45,6 +45,7 @@ h3 {
     padding-right: 5%;
     text-align: center;
 }
+
 
 /* ---------------------------------------------------------- */
 /* Nav Bar CSS -- Mobile First*/
@@ -113,25 +114,20 @@ h3 {
 
 #filter-container label {
     font-weight: lighter;
-    padding-top: 10px;
 }
 
 #filter-container > form > button {
     margin-top: 10px;
-}
-/* ---------------------------------------------------------- */
-/* Form CSS -- Mobile First*/
-/* ---------------------------------------------------------- */
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
 }
-.form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+
+/* ---------------------------------------------------------- */
+/* Index.html specific CSS -- Mobile First*/
+/* ---------------------------------------------------------- */
+.home-header {
+    margin: 0 0 0 .45em;
+    color: black;
+    font-weight: bolder;
 } 
 
 
@@ -145,6 +141,7 @@ h3 {
     background-color: white;
     height: 100%;
     list-style-type: none;
+    padding: 0;
 }
 
 .slide {
@@ -181,6 +178,22 @@ h3 {
     opacity: 1;
     z-index: 2;
 }
+
+
+/* ---------------------------------------------------------- */
+/* Contact.hmtl specific CSS -- Mobile First*/
+/* ---------------------------------------------------------- */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+} 
 
 /* ---------------------------------------------------------- */
 /* UNIVERSAL CSS -- Desktop*/
